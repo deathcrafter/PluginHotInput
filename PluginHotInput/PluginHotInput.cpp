@@ -266,9 +266,30 @@ LRESULT CALLBACK GetMessageProc(int nCode, WPARAM wParam, LPARAM lParam) {
 					Execute(1, L"DOWN", msg->hwnd);
 				}
 				break;
+			case VK_DELETE:
+				Execute(0, L"DELETE", msg->hwnd);
+				break;
+			case VK_HOME:
+				Execute(1, L"HOME", msg->hwnd);
+				break;
+			case VK_END:
+				Execute(1, L"END", msg->hwnd);
+				break;
+			// special actions
+			case 0x41:
+				if (CONTROL_DOWN) {
+					Execute(1, L"SELECTALL", msg->hwnd);
+				}
+				break;
 			case 0x43:
 				if (CONTROL_DOWN) {
 					Execute(0, L"COPY", msg->hwnd);
+				}
+				break;
+			case 0x53:
+				if (CONTROL_DOWN) {
+					Execute(0, L"SAVE", msg->hwnd);
+					
 				}
 				break;
 			case 0x56:
