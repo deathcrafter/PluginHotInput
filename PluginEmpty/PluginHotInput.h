@@ -35,7 +35,6 @@ LRESULT CALLBACK GetMessageProc(int, WPARAM, LPARAM);
 void SetMeasure(Measure*);
 void RemoveMeasure(Measure*);
 
-void Log(LPCWSTR, int);
 void Execute(int, std::wstring, HWND);
 std::wstring ReplaceBang(std::wstring, const std::wstring&, const std::wstring&);
 std::wstring EscLuaChars(std::wstring);

@@ -1,4 +1,26 @@
+/*
+Copyright (C) 2021 Shaktijeet Sahoo
+
+
+This program is free software; you can redistribute it and/or
+modify it under the terms of the GNU General Public License
+as published by the Free Software Foundation; either version 3
+of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*/
+
+
 #include "PluginHotInput.h"
+
+
 
 // global variables
 HINSTANCE g_instance = NULL;
@@ -113,11 +135,43 @@ PLUGIN_EXPORT LPCWSTR IsShiftDown(void* data, const int argc, const WCHAR* argv[
 		return L"1";
 	return L"0";
 }
+
 // ----------------------------------------------------------------------------------------------------------------
 
-/*
-Hook starter and procedures
-*/
+// =========================================================
+// Hook functions
+// =========================================================
+
+void SetMeasure(Measure* measure) {
+	g_measure = measure;
+
+	if (g_measure != nullptr && !g_hookActive) {
+		if (!g_hook) {
+			g_hook = SetWindowsHookEx(WH_GETMESSAGE, GetMessageProc, g_instance, GetWindowThreadProcessId(measure->skinWnd, NULL));
+
+			if (g_hook) {
+				RmLog(measure->rm, LOG_DEBUG, L"Successfully started message hook!");
+				g_hookActive = true;
+			}
+			else {
+				RmLog(measure->rm, LOG_ERROR, L"Unable to start message hook!");
+			}
+		}
+	}
+};
+
+void RemoveMeasure(Measure* measure) {
+	g_measure = nullptr;
+
+	if (g_measure == nullptr && g_hookActive) {
+		while (g_hook && UnhookWindowsHookEx(g_hook) == FALSE) {
+			RmLog(measure->rm, LOG_ERROR, L"Can't unhook message hook!");
+		}
+		RmLog(measure->rm, LOG_DEBUG, L"Unhooked message hook successfully!");
+		g_hook = nullptr;
+		g_hookActive = false;
+	}
+}
 
 LRESULT CALLBACK GetMessageProc(int nCode, WPARAM wParam, LPARAM lParam) {
 
@@ -245,49 +299,11 @@ LRESULT CALLBACK GetMessageProc(int nCode, WPARAM wParam, LPARAM lParam) {
 	return CallNextHookEx(g_hook, nCode, wParam, lParam);
 }
 
-void SetMeasure(Measure* measure) {
-	g_measure = measure;
-
-	if (g_measure != nullptr && !g_hookActive) {
-		if (!g_hook) {
-			g_hook = SetWindowsHookEx(WH_GETMESSAGE, GetMessageProc, g_instance, GetWindowThreadProcessId(measure->skinWnd, NULL));
-
-			if (g_hook) {
-				RmLog(measure->rm, LOG_DEBUG, L"Successfully started message hook!");
-				g_hookActive = true;
-			}
-			else {
-				RmLog(measure->rm, LOG_ERROR, L"Unable to start message hook!");
-			}
-		}
-	}
-};
-
-void RemoveMeasure(Measure* measure) {
-	g_measure = nullptr;
-
-	if (g_measure == nullptr && g_hookActive) {
-		while (g_hook && UnhookWindowsHookEx(g_hook) == FALSE){
-			RmLog(measure->rm, LOG_ERROR, L"Can't unhook message hook!");
-		}
-		RmLog(measure->rm, LOG_DEBUG, L"Unhooked message hook successfully!");
-		g_hook = nullptr;
-		g_hookActive = false;
-	}
-}
-
 // --------------------------------------------------------------------------------------------------------------
 
-// --------------------------------------------------------------------------------------------------------------
-
-/*
-Global executers and helper functions
-*/
-
-void Log(LPCWSTR str, int level = LOG_NOTICE) {
-	if (g_measure != nullptr)
-		RmLog(g_measure->rm, level, str);
-}
+// =========================================================
+// Helper functions
+// =========================================================
 
 void Execute(int bang, std::wstring replaceStr, HWND skinWnd) {
 	if (g_measure != nullptr) {
