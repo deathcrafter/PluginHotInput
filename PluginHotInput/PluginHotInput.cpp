@@ -20,8 +20,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 #include "PluginHotInput.h"
 
-
-
 // global variables
 HINSTANCE g_instance = NULL;
 HHOOK g_hook = nullptr;
@@ -83,39 +81,6 @@ PLUGIN_EXPORT void ExecuteBang(void* data, LPCWSTR args)
 	else if (_wcsicmp(arg.c_str(), L"Stop") == 0) {
 		RemoveMeasure(measure);
 	}
-}
-
-LPCWSTR getClipboard(HWND hwnd)
-{
-	LPCWSTR strData{};
-
-	if (OpenClipboard(hwnd))
-	{
-			HANDLE hClipboardData = GetClipboardData(CF_UNICODETEXT);
-			if (hClipboardData)
-			{
-				WCHAR* pchData = (WCHAR*)GlobalLock(hClipboardData);
-				if (pchData)
-				{
-					strData = pchData;
-					GlobalUnlock(hClipboardData);
-				}
-			}
-		CloseClipboard();
-	}
-	return strData;
-}
-
-PLUGIN_EXPORT LPCWSTR GetClipboard(void* data, const int argc, const WCHAR* argv[])
-{
-	Measure* measure = (Measure*)data;
-
-	if (argc >= 0)
-	{
-		return getClipboard(measure->skinWnd);
-	}
-
-	return L"";
 }
 
 PLUGIN_EXPORT LPCWSTR IsCtrlDown(void* data, const int argc, const WCHAR* argv[])
