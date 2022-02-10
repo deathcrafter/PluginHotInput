@@ -1,6 +1,10 @@
 # PluginHotInput
 Rainmeter plugin for raw input support.
 
+
+https://user-images.githubusercontent.com/77834863/153483347-765a09cc-b26f-49ca-8cbb-d18b4064f8da.mp4
+
+
 # Disclaimer:
 This is a plugin meant for advanced users. You'd most probably need a script, [PowershellRM](https://github.com/khanhas/PowershellRM) or [Lua](https://docs.rainmeter.net/manual/lua-scripting/) to work with it. The example uses a Lua script to create a minimal text field. But you are limited to your imagination.
 
