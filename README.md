@@ -2,8 +2,7 @@
 Rainmeter plugin for raw input support.
 
 # Disclaimer:
-This is a plugin meant for advanced users. You'd most probably need a script, PSRM or lua to work with it. The example uses a lua script to create a minimal text field.
-But you are limited to your imagination.
+This is a plugin meant for advanced users. You'd most probably need a script, [PowershellRM](https://github.com/khanhas/PowershellRM) or [Lua](https://docs.rainmeter.net/manual/lua-scripting/) to work with it. The example uses a Lua script to create a minimal text field. But you are limited to your imagination.
 
 For any suggestions, changes, or additions, open an [issue](https://github.com/deathcrafter/PluginHotInput/issues).
 
